@@ -75,37 +75,62 @@ class Keyboard {
       const key = createElement('button', 'key');
       key.setAttribute('type', 'button');
 
-      if (layoutKey === KEYS.DELETE) {
-        key.classList.add('delete-btn');
-        key.innerText = layoutKey;
-        key.addEventListener('click', () => {
-          this.textarea.value = this.textarea.value.substring(0, this.textarea.value.length - 1);
-        });
-      } else if (layoutKey === KEYS.TAB) {
-        key.classList.add('tab-btn');
-        key.innerText = layoutKey;
-        key.addEventListener('click', () => this.textarea.value += '\t');
-      } else if (layoutKey === KEYS.CAPS_LOCK) {
-        key.classList.add('caps-lock-btn');
-        key.innerText = layoutKey;
-        key.addEventListener('click', () => {
-          this.capslock = !this.capslock;
-          toggleCapsLock();
-        });
-      } else if (layoutKey === KEYS.SHIFT) {
-        key.classList.add('shift-btn');
-        key.innerText = layoutKey;
-        key.addEventListener('click', () => toggleShift());
-      } else if (layoutKey === KEYS.RETURN) {
-        key.classList.add('return-btn');
-        key.innerText = layoutKey;
-        key.addEventListener('click', () => { this.textarea.value += '\n'; });
-      } else if (layoutKey === KEYS.SPACE) {
-        key.classList.add('space-btn');
-        key.addEventListener('click', () => { this.textarea.value += ' '; });
-      } else if (layoutKey === KEYS.FN) {
-        key.classList.add('fn-btn');
-        key.addEventListener('click', toggleFn);
+      switch (layoutKey) {
+        case KEYS.DELETE:
+          key.classList.add('delete-btn');
+          key.innerText = layoutKey;
+          key.addEventListener('click', () => {
+            this.textarea.value = this.textarea.value.substring(0, this.textarea.value.length - 1);
+          });
+          break;
+
+        case KEYS.TAB:
+          key.classList.add('tab-btn');
+          key.innerText = layoutKey;
+          key.addEventListener('click', () => this.textarea.value += '\t');
+          break;
+
+
+        case KEYS.CAPS_LOCK:
+          key.classList.add('caps-lock-btn');
+          key.innerText = layoutKey;
+          key.addEventListener('click', () => {
+            this.capslock = !this.capslock;
+            toggleCapsLock();
+          });
+          break;
+
+        case KEYS.SHIFT:
+          key.classList.add('shift-btn');
+          key.innerText = layoutKey;
+          key.addEventListener('click', () => toggleShift());
+          break;
+
+        case KEYS.RETURN:
+          key.classList.add('return-btn');
+          key.innerText = layoutKey;
+          key.addEventListener('click', () => { this.textarea.value += '\n'; });
+          break;
+
+        case KEYS.SPACE:
+          key.classList.add('space-btn');
+          key.addEventListener('click', () => { this.textarea.value += ' '; });
+          break;
+
+        case KEYS.FN:
+          key.classList.add('fn-btn');
+          key.addEventListener('click', toggleFn);
+          break;
+
+        default:
+          key.textContent = layoutKey;
+          key.addEventListener(('click', () => {
+            if (this.capslock) {
+              this.textarea.value += layoutKey.toUpperCase();
+            } else {
+              this.textarea.value += layoutKey.toLowerCase();
+            }
+          }));
       }
     });
   }
