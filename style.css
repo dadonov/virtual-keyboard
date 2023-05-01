@@ -23,7 +23,9 @@
   font-size: 20px;
   padding: 15px;
 }
-
+.textarea:focus {
+  outline: none !important;
+}
 .key {
   cursor: pointer;
   height: 60px;
@@ -67,11 +69,21 @@
   width : 347px;
 }
 
-.key.active {
-  color: red;
-  background-color: red;
+.key:active {
+  animation: pressingBtn 0.5s ease-in-out backwards;
 }
 
+@keyframes pressingBtn {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .change-language,
 .operational-system {
   margin-top: 20px;

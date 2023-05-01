@@ -13,5 +13,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.body.append(wrapper);
   keyboard.createKeyboard();
   keyboard.createKeys();
+  keyboard.textarea.autofocus = true;
   wrapper.append(titleElement, keyboard.textarea, keyboard.keyboard, changeLanguage, OS);
 });
