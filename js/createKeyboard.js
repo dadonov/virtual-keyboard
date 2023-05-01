@@ -40,6 +40,7 @@ const KEYS = {
   LEFT_SHIFT: 'left shift',
   RIGHT_SHIFT: 'right shift',
   COMMAND: 'command',
+  CONTROL: 'control',
   OPTION: 'option',
   SPACE: 'space',
   RETURN: 'return',
@@ -48,7 +49,7 @@ const KEYS = {
   ARROW_UP: '▲',
   ARROW_DOWN: '▼',
   ARROW_RIGHT: '►',
-  FN: 'Fn',
+  FN: 'fn',
 };
 
 class Keyboard {
@@ -60,13 +61,16 @@ class Keyboard {
     this.keysContainer = null;
     this.capslock = false;
     this.shift = false;
+    this.toggleCapsLock = this.toggleCapsLock.bind(this);
+    this.toggleShift = this.toggleShift.bind(this);
+    // this.toggleFn = this.toggleFn.bind(this);
   }
 
   createKeyboard() {
     this.keyboard = createElement('div', 'keyboard');
     this.textarea = createElement('textarea', 'textarea');
     this.keysContainer = createElement('div', 'keys__container');
-    this.keyboard.prepend(this.textarea);
+    // this.keyboard.prepend(this.textarea);
     this.keyboard.append(this.createKeys());
   }
 
@@ -97,10 +101,7 @@ class Keyboard {
         case KEYS.CAPS_LOCK:
           key.classList.add('caps-lock-btn');
           key.textContent = layoutKey;
-          key.addEventListener('click', () => {
-            this.capslock = !this.capslock;
-            // toggleCapsLock();
-          });
+          key.addEventListener('click', this.toggleCapsLock);
           break;
 
         case KEYS.RETURN:
@@ -114,13 +115,13 @@ class Keyboard {
         case KEYS.RIGHT_SHIFT:
           key.classList.add('shift-btn');
           key.textContent = layoutKey;
-          // key.addEventListener('click', toggleShift);
+          key.addEventListener('click', this.toggleShift);
           break;
 
         case KEYS.FN:
           key.classList.add('fn-btn');
           key.textContent = layoutKey;
-          // key.addEventListener('click', toggleFn);
+          key.addEventListener('click', this.toggleFn);
           break;
 
         case KEYS.CONTROL:
@@ -148,6 +149,7 @@ class Keyboard {
 
         default:
           key.textContent = layoutKey;
+          key.classList.add('alphanum');
           key.addEventListener('click', () => {
             if (this.capslock) {
               this.textarea.value += layoutKey.toUpperCase();
@@ -164,6 +166,30 @@ class Keyboard {
     });
     return fragment;
   }
-}
 
+  toggleCapsLock() {
+    this.capslock = !this.capslock;
+    const alphanumKeys = document.querySelectorAll('.alphanum');
+
+    alphanumKeys.forEach((key) => {
+      if (this.capslock) {
+        key.textContent = key.textContent.toUpperCase();
+      } else {
+        key.textContent = key.textContent.toLowerCase();
+      }
+    });
+    return this.capslock;
+  }
+
+  toggleShift() {
+    this.shift = !this.shift;
+    const keys = document.querySelectorAll('.key'); // node list
+
+    keys.forEach((key, index) => {
+      const keyTextContent = this.shift ? shiftValues[this.language][index]
+        : keyboardLayouts[this.language][index];
+      key.textContent = keyTextContent;
+    });
+  }
+}
 export { Keyboard };
