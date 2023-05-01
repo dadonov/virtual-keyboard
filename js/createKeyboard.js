@@ -1,4 +1,5 @@
 import { createElement } from './createElement.js';
+import { setLocalStorage, getLocalStorage } from './localStorage.js';
 
 const keyboardLayouts = {
   en: [
@@ -53,8 +54,8 @@ const KEYS = {
 };
 
 class Keyboard {
-  constructor(language = 'en') {
-    this.language = language;
+  constructor() {
+    this.language = getLocalStorage();
     this.keyboard = null;
     this.textarea = null;
     // this.textarea.value = null;
@@ -200,6 +201,7 @@ class Keyboard {
     } else {
       this.language = 'en';
     }
+    setLocalStorage(this.language);
 
     keys.forEach((key, index) => {
       const keyTextContent = keyboardLayouts[this.language][index];
