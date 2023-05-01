@@ -63,7 +63,7 @@ class Keyboard {
     this.shift = false;
     this.toggleCapsLock = this.toggleCapsLock.bind(this);
     this.toggleShift = this.toggleShift.bind(this);
-    // this.toggleFn = this.toggleFn.bind(this);
+    this.toggleFn = this.toggleFn.bind(this);
   }
 
   createKeyboard() {
@@ -188,6 +188,21 @@ class Keyboard {
     keys.forEach((key, index) => {
       const keyTextContent = this.shift ? shiftValues[this.language][index]
         : keyboardLayouts[this.language][index];
+      key.textContent = keyTextContent;
+    });
+  }
+
+  toggleFn() {
+    const keys = document.querySelectorAll('.key');
+
+    if (this.language === 'en') {
+      this.language = 'ru';
+    } else {
+      this.language = 'en';
+    }
+
+    keys.forEach((key, index) => {
+      const keyTextContent = keyboardLayouts[this.language][index];
       key.textContent = keyTextContent;
     });
   }
