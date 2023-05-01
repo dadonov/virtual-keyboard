@@ -7,14 +7,14 @@ const keyboardLayouts = {
     'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\',
     'caps lock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", 'return',
     'left shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '▲', 'right shift',
-    'fn', 'control', 'option', 'command', 'space', 'command', 'option', '◄', '▼', '►',
+    'fn', 'control', 'option', 'cmd', 'space', 'cmd', 'option', '◄', '▼', '►',
   ],
   ru: [
     'ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'delete',
     'tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\',
     'caps lock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'return',
     'left shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '▲', 'right shift',
-    'fn', 'control', 'option', 'command', 'space', 'command', 'option', '◄', '▼', '►',
+    'fn', 'control', 'option', 'cmd', 'space', 'cmd', 'option', '◄', '▼', '►',
   ],
 };
 
@@ -24,14 +24,14 @@ const shiftValues = {
     'tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|',
     'caps lock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'return',
     'left shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '▲', 'right shift',
-    'fn', 'control', 'option', 'command', 'space', 'command', 'option', '◄', '▼', '►',
+    'fn', 'control', 'option', 'cmd', 'space', 'cmd', 'option', '◄', '▼', '►',
   ],
   ru: [
     'Ё', '!', '"', '№', ';', '%', ':', '?', '*', '(', ')', '_', '+', 'delete',
     'tab', 'Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ', '/',
     'caps lock', 'Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э', 'return',
     'left shift', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', ',', '▲', 'right shift',
-    'fn', 'control', 'option', 'command', 'space', 'command', 'option', '◄', '▼', '►',
+    'fn', 'control', 'option', 'cmd', 'space', 'cmd', 'option', '◄', '▼', '►',
   ],
 };
 
@@ -40,7 +40,7 @@ const KEYS = {
   CAPS_LOCK: 'caps lock',
   LEFT_SHIFT: 'left shift',
   RIGHT_SHIFT: 'right shift',
-  COMMAND: 'command',
+  COMMAND: 'cmd',
   CONTROL: 'control',
   OPTION: 'option',
   SPACE: 'space',
@@ -58,7 +58,6 @@ class Keyboard {
     this.language = getLocalStorage();
     this.keyboard = null;
     this.textarea = null;
-    // this.textarea.value = null;
     this.keysContainer = null;
     this.capslock = false;
     this.shift = false;
@@ -70,8 +69,9 @@ class Keyboard {
   createKeyboard() {
     this.keyboard = createElement('div', 'keyboard');
     this.textarea = createElement('textarea', 'textarea');
+    this.textarea.focus();
     this.keysContainer = createElement('div', 'keys__container');
-    // this.keyboard.prepend(this.textarea);
+    this.keyboard.prepend(this.textarea);
     this.keyboard.append(this.createKeys());
   }
 
@@ -152,7 +152,7 @@ class Keyboard {
           key.textContent = layoutKey;
           key.classList.add('alphanum');
           key.addEventListener('click', () => {
-            if (this.capslock) {
+            if (this.capslock || this.shift) {
               this.textarea.value += layoutKey.toUpperCase();
             } else {
               this.textarea.value += layoutKey.toLowerCase();
@@ -171,8 +171,8 @@ class Keyboard {
   toggleCapsLock() {
     this.capslock = !this.capslock;
     const alphanumKeys = document.querySelectorAll('.alphanum');
-
-    alphanumKeys.forEach((key) => {
+    alphanumKeys.forEach((element) => {
+      const key = element;
       if (this.capslock) {
         key.textContent = key.textContent.toUpperCase();
       } else {
@@ -184,9 +184,9 @@ class Keyboard {
 
   toggleShift() {
     this.shift = !this.shift;
-    const keys = document.querySelectorAll('.key'); // node list
-
-    keys.forEach((key, index) => {
+    const keys = document.querySelectorAll('.key');
+    keys.forEach((element, index) => {
+      const key = element;
       const keyTextContent = this.shift ? shiftValues[this.language][index]
         : keyboardLayouts[this.language][index];
       key.textContent = keyTextContent;
@@ -203,10 +203,12 @@ class Keyboard {
     }
     setLocalStorage(this.language);
 
-    keys.forEach((key, index) => {
+    keys.forEach((element, index) => {
+      const key = element;
       const keyTextContent = keyboardLayouts[this.language][index];
       key.textContent = keyTextContent;
     });
   }
 }
+
 export { Keyboard };
